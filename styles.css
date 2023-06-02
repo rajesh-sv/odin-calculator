@@ -1,0 +1,121 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+html {
+  box-sizing: border-box;
+  background-color: #5cdb95;
+  font-family: "Ubuntu Mono", monospace;
+  font-weight: 400;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  font-weight: inherit;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  flex: 0 0 auto;
+  margin-top: 100px;
+  background-color: #05386b;
+  border-radius: 16px;
+  width: 300px;
+  height: 450px;
+  box-shadow: 0 0 8px rgba(0,0,0,.18),0 8px 16px rgba(0,0,0,.36);
+}
+
+.display {
+  background-color: #edf5e1;
+  color: #379683;
+  border-radius: 16px;
+  height: 20%;
+  margin: 20px;
+  padding: 15px;
+  box-shadow: 0 0 8px rgba(0,0,0,.18),0 8px 16px rgba(0,0,0,.36);
+}
+
+.expression-display,
+.number-display {
+  text-align: right;
+}
+
+.number-display {
+  font-size: 32px;
+  margin-top: 10px;
+}
+
+.buttons-container {
+  margin: 20px;
+  height: calc(80% - 60px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.buttons-row {
+  flex: 1 1 auto;
+  display: flex;
+  gap: 6px;
+}
+
+.clear,
+.bracket,
+.operator,
+.number,
+.equal-to {
+  width: 10px;
+  height: 100%;
+  flex: 1 0 auto;
+  background-color: #379683;
+  color: #edf5e1;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 0 8px rgba(0,0,0,.18),0 8px 16px rgba(0,0,0,.36);
+}
+
+.clear:hover,
+.bracket:hover,
+.operator:hover,
+.number:hover,
+.equal-to:hover {
+  transition: all 0.1s;
+  scale: 1.01;
+  translate: 0px -1px;
+}
+
+.number:hover {
+  background-color: #8ee4af;
+  color: #05386b;
+}
+
+.clear:hover {
+  background-color: #fc4445;
+  color: #05386b;
+}
+
+.operator:hover {
+  background-color: #44f6fc;
+  color: #05386b;
+}
+
+.bracket:hover {
+  background-color: #f6fc44;
+  color: #05386b;
+}
+
+.equal-to:hover {
+  background-color: #a3fc44;
+  color: #05386b;
+}
