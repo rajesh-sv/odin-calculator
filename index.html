@@ -1,53 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Calculator</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js" defer></script>
-</head>
-<body>
-  <div class="container">
-    <div class="display">
-      <div class="expression-display">(4*4-23+234)/5%6+89</div>
-      <div class="number-display">22</div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Calculator</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="display">
+        <div class="expression-display"></div>
+        <div class="number-display"></div>
+      </div>
+      <div class="buttons-container">
+        <div class="buttons-row">
+          <button id="clear-button" class="clear">Clear</button>
+          <button id="delete-button" class="clear">Delete</button>
+        </div>
+        <div class="buttons-row">
+          <button id="open-bracket-button" class="bracket">(</button>
+          <button id="close-bracket-button" class="bracket">)</button>
+          <button class="operator" value="^">^</button>
+          <button class="operator" value="%">%</button>
+        </div>
+        <div class="buttons-row">
+          <button class="number" value="7">7</button>
+          <button class="number" value="8">8</button>
+          <button class="number" value="9">9</button>
+          <button class="operator" value="/">/</button>
+        </div>
+        <div class="buttons-row">
+          <button class="number" value="4">4</button>
+          <button class="number" value="5">5</button>
+          <button class="number" value="6">6</button>
+          <button class="operator" value="-">-</button>
+        </div>
+        <div class="buttons-row">
+          <button class="number" value="1">1</button>
+          <button class="number" value="2">2</button>
+          <button class="number" value="3">3</button>
+          <button class="operator" value="+">+</button>
+        </div>
+        <div class="buttons-row">
+          <button class="decimal">.</button>
+          <button class="number" value="0">0</button>
+          <button class="equal-to">=</button>
+          <button class="operator" value="*">*</button>
+        </div>
+      </div>
     </div>
-    <div class="buttons-container">
-      <div class="buttons-row">
-        <button id="clear-button" class="clear">Clear</button>
-        <button id="delete-button" class="clear">Delete</button>
-      </div>
-      <div class="buttons-row">
-        <button id="open-bracket-button" class="bracket">(</button>
-        <button id="close-bracket-button" class="bracket">)</button>
-        <button id="power-operator-button" class="operator">^</button>
-        <button id="modulus-operator-button" class="operator">%</button>
-      </div>
-      <div class="buttons-row">
-        <button id="number-7-button" class="number">7</button>
-        <button id="number-8-button" class="number">8</button>
-        <button id="number-9-button" class="number">9</button>
-        <button id="division-operator-button" class="operator">/</button>
-      </div>
-      <div class="buttons-row">
-        <button id="number-4-button" class="number">4</button>
-        <button id="number-5-button" class="number">5</button>
-        <button id="number-6-button" class="number">6</button>
-        <button id="subtraction-operator-button" class="operator">-</button>
-      </div>
-      <div class="buttons-row">
-        <button id="number-1-button" class="number">1</button>
-        <button id="number-2-button" class="number">2</button>
-        <button id="number-3-button" class="number">3</button>
-        <button id="addition-operator-button" class="operator">+</button>
-      </div>
-      <div class="buttons-row">
-        <button id="decimal-button" class="number">.</button>
-        <button id="number-0-button" class="number">0</button>
-        <button id="equal-to-button" class="equal-to">=</button>
-        <button id="multiplication-operator-button" class="operator">*</button>
-      </div>
-    </div>
-  </div>
-</body>
+  </body>
 </html>

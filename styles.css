@@ -74,6 +74,7 @@ body {
 .bracket,
 .operator,
 .number,
+.decimal,
 .equal-to {
   width: 10px;
   height: 100%;
@@ -89,13 +90,15 @@ body {
 .bracket:hover,
 .operator:hover,
 .number:hover,
+.decimal:hover,
 .equal-to:hover {
   transition: all 0.1s;
   scale: 1.01;
   translate: 0px -1px;
 }
 
-.number:hover {
+.number:hover,
+.decimal:hover {
   background-color: #8ee4af;
   color: #05386b;
 }
@@ -118,4 +121,9 @@ body {
 .equal-to:hover {
   background-color: #a3fc44;
   color: #05386b;
+}
+
+.decimal.greyed {
+  background-color: #37968344;
+  color: #edf5e1;
 }
