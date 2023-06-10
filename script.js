@@ -6,7 +6,7 @@ const operate = {
   "*": (a, b) => a * b,
   "/": (a, b) => a / b,
   "%": (a, b) => a % b,
-  "^": (a, b) => a ^ b,
+  "^": (a, b) => a ** b,
 }
 
 let decimalUsed;
@@ -30,14 +30,12 @@ const operatorButtons = Array.from(document.querySelectorAll('.operator'));
 operatorButtons.forEach((operatorButton) => {
   operatorButton.addEventListener('click', (event) => {
     const operator = event.target.value;
-    if (expressionItemArr.length) {
-      if (expressionItemArr[expressionItemArr.length-1] === ")" || typeof expressionItemArr[expressionItemArr.length-1] === "number")
-        pushOperatorToExpression(operator);
-      else if (isOperator(expressionItemArr[expressionItemArr.length-1]))
-        popPushOperatorToExpression(operate);
-    } else {
+    if (expressionItemArr.length && getLastArrayItem(expressionItemArr) === ')') {
+      pushOperatorToExpression(operator);
+    }
+    else {
       pushCurrentNumberToExpression();
-      pushOperatorToExpression();
+      pushOperatorToExpression(operator);
     }
   });
 });
@@ -60,56 +58,61 @@ clearButton.addEventListener('click', () => {
 });
 
 deleteButton.addEventListener('click', () => {
-  currentNumber = currentNumber.slice(0, currentNumber.length-1);
+  if (currentNumber[currentNumber.length - 1] === ".") {
+    setDecimalAvailable();
+  }
+  currentNumber = currentNumber.slice(0, currentNumber.length - 1);
   if (!currentNumber.length)
     currentNumber = DEFAULT_DISPLAY_NUMBER;
-  else if (currentNumber[currentNumber.length-1] === ".") {
-    decimalUsed = false;
-    decimalButton.classList.toggle('greyed');
-    currentNumber = currentNumber.slice(0, currentNumber.length-1);
-  }
   updateDisplayNumber();
 });
 
 openBracket.addEventListener('click', () => {
-  if (!expressionItemArr.length || isOperator(expressionItemArr[expressionItemArr.length-1]) || expressionItemArr[expressionItemArr.length-1] === "(") {
+  const lastExpressionItem = getLastArrayItem(expressionItemArr);
+  if (!expressionItemArr.length || isOperator(lastExpressionItem) || lastExpressionItem === "(") {
     ++closeBracketAllowedCount;
-    mathExpression += "(";
-    expressionItemArr.push("(");
-    updateDisplayExpression();
+    pushBracketToExpression("(");
   }
 });
 
 closeBracket.addEventListener('click', () => {
-  if (closeBracketAllowedCount && typeof expressionItemArr[expressionItemArr.length-1] !== "number") {
-    --closeBracketAllowedCount;
-    if (expressionItemArr[expressionItemArr.length-1] !== ")")
+  if (closeBracketAllowedCount) {
+    if (expressionItemArr[expressionItemArr.length - 1] !== ")")
       pushCurrentNumberToExpression();
-    mathExpression += ")";
-    expressionItemArr.push(")");
-    updateDisplayExpression();
+    pushBracketToExpression(")");
+    --closeBracketAllowedCount;
   }
 });
 
 decimalButton.addEventListener('click', () => {
   if (!decimalUsed) {
-    decimalUsed = true;
-    decimalButton.classList.toggle('greyed');
+    setDecimalUnavailable();
     pushDecimalToCurrentNumber();
   }
 });
 
 equalToButton.addEventListener('click', () => {
-  pushCurrentNumberToExpression();
-
+  if (!expressionItemArr.length || isOperator(getLastArrayItem(expressionItemArr)))
+    pushCurrentNumberToExpression();
+  while (closeBracketAllowedCount--) {
+    pushBracketToExpression(")");
+  }
+  expressionItemArr.unshift("(")
+  expressionItemArr.push(")")
+  currentNumber = evaluateMathExpression()
+  updateDisplayNumber();
 });
 
 function initialize() {
-  decimalUsed = false;
+  setDecimalAvailable();
   currentNumber = DEFAULT_DISPLAY_NUMBER;
   mathExpression = "";
   expressionItemArr.length = 0;
   closeBracketAllowedCount = 0;
+  updateDisplay();
+}
+
+function updateDisplay() {
   updateDisplayNumber();
   updateDisplayExpression();
 }
@@ -122,6 +125,10 @@ function updateDisplayExpression() {
   expressionDisplay.textContent = mathExpression;
 }
 
+function getLastArrayItem(arr) {
+  return arr[arr.length - 1];
+}
+
 function isOperator(operator) {
   return operator in operate;
 }
@@ -130,21 +137,27 @@ function pushCurrentNumberToExpression() {
   mathExpression += currentNumber;
   expressionItemArr.push(Number(currentNumber));
   currentNumber = DEFAULT_DISPLAY_NUMBER;
-  updateDisplayExpression();
-  updateDisplayNumber();
+  setDecimalAvailable();
+  updateDisplay();
 }
 
 function pushOperatorToExpression(operator) {
   mathExpression += operator;
   expressionItemArr.push(operator);
+  updateDisplay();
+}
+
+function pushBracketToExpression(bracket) {
+  mathExpression += bracket;
+  expressionItemArr.push(bracket);
   updateDisplayExpression();
 }
 
 function popPushOperatorToExpression(operator) {
-  mathExpression = mathExpression.slice(0, mathExpression.length-1) + operator;
+  mathExpression = mathExpression.slice(0, mathExpression.length - 1) + operator;
   expressionItemArr.pop();
   expressionItemArr.push(operator);
-  updateDisplayExpression();
+  updateDisplay();
 }
 
 function pushDigitToCurrentNumber(digit) {
@@ -157,4 +170,68 @@ function pushDigitToCurrentNumber(digit) {
 function pushDecimalToCurrentNumber() {
   currentNumber += ".";
   updateDisplayNumber();
+}
+
+function setDecimalUnavailable() {
+  decimalUsed = true;
+  decimalButton.classList.add('greyed');
+}
+
+function setDecimalAvailable() {
+  decimalUsed = false;
+  decimalButton.classList.remove('greyed');
+}
+
+function evaluateMathExpression() {
+  const stack = [];
+  for (const item of expressionItemArr) {
+    if (item === ")") {
+      const simpleExpression = [];
+      while (getLastArrayItem(stack) !== "(")
+        simpleExpression.push(stack.pop());
+      simpleExpression.reverse();
+      console.log(simpleExpression);
+      stack.pop();
+      stack.push(evaluateSimpleExpression(simpleExpression)[0]);
+    } else {
+      stack.push(item);
+    }
+  }
+  return Math.round(stack[0] * 100) / 100;
+}
+
+function evaluateSimpleExpression(simpleExpression) {
+  simpleExpression = evaluatePrecedenceOneOperators(simpleExpression); // ^ (Power)
+  console.log(simpleExpression);
+  simpleExpression = evaluatePrecedenceTwoOperators(simpleExpression); // * (Multiply), / (Divide), % (Modulus)
+  console.log(simpleExpression);
+  simpleExpression = evaluatePrecedenceThreeOperators(simpleExpression); // + (Add), - (Subtract)
+  return simpleExpression;
+}
+
+function evaluatePrecedenceOneOperators(simpleExpression) {
+  return evaluateOperators(simpleExpression, ["^"]);
+}
+
+function evaluatePrecedenceTwoOperators(simpleExpression) {
+  return evaluateOperators(simpleExpression, ["*", "/", "%"]);
+}
+
+function evaluatePrecedenceThreeOperators(simpleExpression) {
+  return evaluateOperators(simpleExpression, ["+", "-"]);
+}
+
+function evaluateOperators(simpleExpression, operatorsList) {
+  const newExpression = [];
+  for (let i = 0; i < simpleExpression.length; ++i) {
+    if (operatorsList.includes(simpleExpression[i])) {
+      a = newExpression.pop();
+      b = simpleExpression[i + 1];
+      newExpression.push(operate[simpleExpression[i]](a, b));
+      ++i;
+    } else {
+      newExpression.push(simpleExpression[i]);
+    }
+  }
+  return newExpression;
 }
